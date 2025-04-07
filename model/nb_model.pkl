@@ -1,0 +1,6 @@
+from sklearn.naive_bayes import GaussianNB
+
+nb_model = GaussianNB()
+nb_model.fit(X_train_scaled, y_train)
+
+joblib.dump(nb_model, "model/nb_model.pkl")

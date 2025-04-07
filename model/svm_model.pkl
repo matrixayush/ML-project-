@@ -1,0 +1,6 @@
+from sklearn.svm import SVC
+
+svm_model = SVC(probability=True)
+svm_model.fit(X_train_scaled, y_train)
+
+joblib.dump(svm_model, "model/svm_model.pkl")

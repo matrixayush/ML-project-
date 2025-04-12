@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction Score</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        img {
+            width: 80%;
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Prediction Score</h1>
+
+    <h2>Confusion Matrices</h2>
+    <img src="{{ url_for('static', filename=confusion_matrix) }}" alt="Confusion Matrices">
+
+    <h2>Model Comparison (Accuracy, Precision, Recall, F1-Score)</h2>
+    <img src="{{ url_for('static', filename=comparison_chart) }}" alt="Model Comparison">
+
+</body>
+</html>

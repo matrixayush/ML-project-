@@ -1,6 +1,0 @@
-from sklearn.neighbors import KNeighborsClassifier
-
-knn_model = KNeighborsClassifier()
-knn_model.fit(X_train_scaled, y_train)
-
-joblib.dump(knn_model, "model/knn_model.pkl")

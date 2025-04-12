@@ -1,6 +1,0 @@
-from sklearn.linear_model import LogisticRegression
-
-logreg = LogisticRegression()
-logreg.fit(X_train_scaled, y_train)
-
-joblib.dump(logreg, "model/logreg_model.pkl")

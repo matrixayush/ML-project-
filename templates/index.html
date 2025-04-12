@@ -9,26 +9,61 @@
 <body>
 <div class="container col-md-6 offset-md-3">
     <h2 class="text-center">Cancer Type Prediction</h2>
-    <form action="/predict" method="POST">
-        <div class="form-group">
-            <label for="model">Select Model</label>
-            <select name="model" class="form-control" required>
-                <option value="logreg">Logistic Regression</option>
-                <option value="svm">Support Vector Machine</option>
-                <option value="nb">Naive Bayes</option>
-                <option value="dt">Decision Tree</option>
-                <option value="rf">Random Forest</option>
-                <option value="knn">K-Nearest Neighbors</option>
-            </select>
-        </div>
-        {% for column in columns %}
-        <div class="form-group">
-            <label>{{ column }}</label>
-            <input type="number" step="any" name="{{ column }}" class="form-control" required>
-        </div>
-        {% endfor %}
-        <button type="submit" class="btn btn-primary">Predict</button>
-    </form>
+    <form method="POST" action="/predict">
+  <div>
+    <label for="radius">Radius:</label>
+    <input type="number" step="any" name="radius" required>
+  </div>
+  <div>
+    <label for="texture">Texture:</label>
+    <input type="number" step="any" name="texture" required>
+  </div>
+  <div>
+    <label for="perimeter">Perimeter:</label>
+    <input type="number" step="any" name="perimeter" required>
+  </div>
+  <div>
+    <label for="area">Area:</label>
+    <input type="number" step="any" name="area" required>
+  </div>
+  <div>
+    <label for="smoothness">Smoothness:</label>
+    <input type="number" step="any" name="smoothness" required>
+  </div>
+  <div>
+    <label for="compactness">Compactness:</label>
+    <input type="number" step="any" name="compactness" required>
+  </div>
+  <div>
+    <label for="symmetry">Symmetry:</label>
+    <input type="number" step="any" name="symmetry" required>
+  </div>
+  <div>
+    <label for="fractal_dimension">Fractal Dimension:</label>
+    <input type="number" step="any" name="fractal_dimension" required>
+  </div>
+  <div>
+    <label for="model">Select Model:</label>
+    <select name="model">
+      <option value="logreg">Logistic Regression</option>
+      <option value="knn">KNN</option>
+      <option value="dt">Decision Tree</option>
+      <option value="nb">Naive Bayes</option>
+      <option value="rf">Random Forest</option>
+    </select>
+  </div>
+  <button type="submit">Predict</button>
+</form>
+
+
+<hr>
+    <h3>Data Preview</h3>
+    <div class="table-responsive">
+        {{ data_preview|safe }}
+    </div>
+</div>
+<div>
+    <a href="/prediction_score">See comparison between results from different models</a>
 </div>
 </body>
 </html>

@@ -1,6 +1,0 @@
-from sklearn.ensemble import RandomForestClassifier
-
-rf_model = RandomForestClassifier()
-rf_model.fit(X_train_scaled, y_train)
-
-joblib.dump(rf_model, "model/rf_model.pkl")

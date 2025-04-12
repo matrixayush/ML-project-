@@ -1,6 +1,0 @@
-from sklearn.tree import DecisionTreeClassifier
-
-dt_model = DecisionTreeClassifier()
-dt_model.fit(X_train_scaled, y_train)
-
-joblib.dump(dt_model, "model/dt_model.pkl")

@@ -44,6 +44,19 @@ def predict():
         # Make prediction
         prediction = model.predict(input_scaled)[0]
         result = 'Malignant' if prediction == 1 else 'Benign'
+        # Logistic Regression Sigmoid Curve
+        if selected_model == 'logreg':
+            from scipy.special import expit
+            x_vals = np.linspace(-10, 10, 100)
+            y_vals = expit(x_vals)
+            plt.figure()
+            plt.plot(x_vals, y_vals, label='Sigmoid Function')
+            plt.title('Logistic Regression Sigmoid Curve')
+            plt.xlabel('Logit')
+            plt.ylabel('Probability')
+            plt.grid(True)
+            plt.savefig('static/logreg_sigmoid.png')
+            plt.close()
 
         # Additional evaluations (ROC + Confusion Matrix)
         data = pd.read_csv('data/Prostate_Cancer.csv')
@@ -77,6 +90,65 @@ def predict():
         plt.tight_layout()
         plt.savefig('static/conf_matrix.png')
         plt.close()
+        if selected_model in ['logreg', 'knn', 'svm']:  # Add 'svm' if model is trained similarly
+            from matplotlib.colors import ListedColormap
+            from sklearn.decomposition import PCA
+
+            # Reduce dimensions for plotting
+            pca = PCA(n_components=2)
+            X_pca = pca.fit_transform(X_scaled)
+            model.fit(X_pca, y_true)  # Fit on PCA-reduced data
+
+            h = .02
+            x_min, x_max = X_pca[:, 0].min() - 1, X_pca[:, 0].max() + 1
+            y_min, y_max = X_pca[:, 1].min() - 1, X_pca[:, 1].max() + 1
+            xx, yy = np.meshgrid(np.arange(x_min, x_max, h),
+                                 np.arange(y_min, y_max, h))
+            Z = model.predict(np.c_[xx.ravel(), yy.ravel()])
+            Z = Z.reshape(xx.shape)
+
+            plt.figure()
+            cmap_light = ListedColormap(['#FFAAAA', '#AAAAFF'])
+            cmap_bold = ListedColormap(['#FF0000', '#0000FF'])
+            plt.contourf(xx, yy, Z, cmap=cmap_light)
+            plt.scatter(X_pca[:, 0], X_pca[:, 1], c=y_true, cmap=cmap_bold, edgecolor='k', s=20)
+            plt.title(f'{selected_model.upper()} Decision Boundary (PCA-reduced)')
+            plt.xlabel('PC 1')
+            plt.ylabel('PC 2')
+            plt.tight_layout()
+            plt.savefig(f'static/{selected_model}_decision_boundary.png')
+            plt.close()
+
+
+        if selected_model in ['rf', 'logreg']:  # 'rf' for random forest
+            try:
+                importances = model.feature_importances_ if selected_model == 'rf' else np.abs(model.coef_[0])
+                sorted_idx = np.argsort(importances)[::-1]
+                feature_names = X_all.columns[sorted_idx]
+                importances_sorted = importances[sorted_idx]
+
+                plt.figure(figsize=(8, 5))
+                sns.barplot(x=importances_sorted, y=feature_names, palette='coolwarm')
+                plt.title(f'{selected_model.upper()} Feature Importance')
+                plt.xlabel('Importance')
+                plt.ylabel('Feature')
+                plt.tight_layout()
+                plt.savefig(f'static/{selected_model}_feature_importance.png')
+                plt.close()
+            except:
+                pass  # In case model doesn’t support feature_importances_
+        # Decision Tree Structure
+        if selected_model == 'dt':
+            from sklearn import tree
+            plt.figure(figsize=(20, 10))
+            tree.plot_tree(model,
+                           feature_names=X_all.columns,
+                           class_names=['Benign', 'Malignant'],
+                           filled=True, rounded=True)
+            plt.title('Decision Tree Structure')
+            plt.tight_layout()
+            plt.savefig('static/dt_structure.png')
+            plt.close()
 
         return render_template('result.html', result=result, model_name=selected_model.upper())
 
